@@ -20,6 +20,7 @@
 import bisect
 import logging
 import os
+import re
 import shlex
 from gettext import gettext as _
 from typing import cast
@@ -192,7 +193,7 @@ class CineWindow(Adw.ApplicationWindow):
             loglevel="info",
             audio_client_name=_("Cine"),
             screenshot_directory=SCREENSHOT_DIR,
-            screenshot_template="cine_%n",
+            screenshot_template="%F_%#n",
             config=True,
             config_dir=CONFIG_DIR,
             input_builtin_bindings=False,
@@ -1765,6 +1766,22 @@ class CineWindow(Adw.ApplicationWindow):
         def on_file_loaded(_event):
             idle_add_once(on_f_loaded)
             timeout_add_seconds_once(5, setattr, self, "_error_count", 0)
+
+        @self.mpv.message_handler("cine-screenshot")
+        def on_screenshot(*flags):
+            # Number screenshots per file, after the highest existing one
+            if not self.mpv.filename:
+                return
+            stem = os.path.splitext(self.mpv.filename)[0]
+            folder = (
+                self.mpv.command("expand-path", self.mpv.screenshot_directory) or "."
+            )
+            os.makedirs(folder, exist_ok=True)
+            pattern = re.compile(rf"{re.escape(stem)}_(\d+)\.[^.]+")
+            nums = [int(m[1]) for f in os.listdir(folder) if (m := pattern.fullmatch(f))]
+            name = f"{stem}_{max(nums, default=0) + 1:04d}.{self.mpv.screenshot_format}"
+            path = os.path.join(folder, name)
+            self.mpv.command("osd-msg", "screenshot-to-file", path, *flags)
 
         @self.mpv.event_callback("end-file")
         def on_end_file(event):

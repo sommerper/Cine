@@ -78,8 +78,8 @@ ctrl+[           frame-step -1 seek; show-text "⯇⯇" #{_("Go Back One Frame")
 ctrl+]           frame-step 1 seek; show-text "⯈⯈" #{_("Advance One Frame")}
 Ctrl+LEFT        nonrepeatable add chapter -1 #{_("Seek to the Previous Chapter")}
 Ctrl+RIGHT       nonrepeatable add chapter 1 #{_("Seek to the Next Chapter")}
-s                nonrepeatable screenshot #{_("Take Screenshot With Subtitles")}
-S                nonrepeatable screenshot video #{_("Take Screenshot Without Subtitles")}
+s                nonrepeatable script-message cine-screenshot #{_("Take Screenshot With Subtitles")}
+S                nonrepeatable script-message cine-screenshot video #{_("Take Screenshot Without Subtitles")}
 i                nonrepeatable script-binding stats/display-stats #{_("Statistics")}
 I                nonrepeatable script-binding stats/display-stats-toggle #{_("Statistics Overlay")}
 ctrl+l           nonrepeatable ab-loop #{_("Set/Clear A-B Loop Points")}
