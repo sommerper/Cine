@@ -39,7 +39,7 @@ from .window import CineWindow
 
 logger = logging.getLogger(__name__)
 
-os.environ["GSK_RENDERER"] = "gl"
+os.environ["GSK_RENDERER"] = "opengl"
 
 # Set the icon shown in gnome sound settings
 os.environ["PIPEWIRE_PROPS"] = '{application.icon-name="io.github.diegopvlk.Cine"}'

@@ -32,29 +32,33 @@ from .utils import KEY_REMAP
 INTERNAL_BINDINGS = f"""\
 UP               no-osd add volume 5; show-text "{_("Volume")}: ${{volume}}%" #{_("Volume Increase")}
 DOWN             no-osd add volume -5; show-text "{_("Volume")}: ${{volume}}%" #{_("Volume Decrease")}
+d                no-osd add volume 5; show-text "{_("Volume")}: ${{volume}}%" #{_("Volume Increase")}
+c                no-osd add volume -5; show-text "{_("Volume")}: ${{volume}}%" #{_("Volume Decrease")}
 WHEEL_UP         no-osd add volume 5; show-text "{_("Volume")}: ${{volume}}%"
 WHEEL_DOWN       no-osd add volume -5; show-text "{_("Volume")}: ${{volume}}%"
 k                nonrepeatable cycle pause; #{_("Play/Pause")}
 p                nonrepeatable cycle pause; #{_("Play/Pause")}
 SPACE            nonrepeatable cycle pause; #{_("Play/Pause")}
-c                nonrepeatable no-osd cycle sub-visibility; no-osd set user-data/show-icon "yes" #{_("Show/Hide Subtitles")}
-z                nonrepeatable cycle sub; show-text "{_("Subtitles")}: ${{sub}}" #{_("Next Subtitle Track")}
+BS               nonrepeatable cycle pause; #{_("Play/Pause")}
 Z                nonrepeatable cycle sub down; show-text "{_("Subtitles")}: ${{sub}}" #{_("Previous Subtitle Track")}
 alt+z            nonrepeatable cycle secondary-sid; show-text "{_("Secondary Subtitles")}: ${{secondary-sid}}"; #{_("Next Secondary Subtitle Track")}
 ctrl+z           nonrepeatable cycle secondary-sid down; show-text "{_("Secondary Subtitles")}: ${{secondary-sid}}"; #{_("Previous Secondary Subtitle Track")}
-a                nonrepeatable cycle audio; show-text "{_("Audio")}: ${{audio}}" #{_("Next Audio Track")}
 A                nonrepeatable cycle audio down; show-text "{_("Audio")}: ${{audio}}" #{_("Previous Audio Track")}
-j                seek -10; show-text "⯇⯇" #{_("Seek 10s Backward")}
+j                set video-zoom 0; set video-align-x 0; set video-align-y 0; set video-pan-x 0; set video-pan-y 0; show-text "{_("Zoom")}: ${{video-zoom}}" #{_("Reset Zoom and Pan")}
 l                seek 10; show-text "⯈⯈" #{_("Seek 10s Forward")}
 LEFT             seek -5; show-text "⯇⯇" #{_("Seek 5s Backward")}
 RIGHT            seek 5; show-text "⯈⯈" #{_("Seek 5s Forward")}
+s                seek -5; show-text "⯇⯇" #{_("Seek 5s Backward")}
+h                seek 5; show-text "⯈⯈" #{_("Seek 5s Forward")}
 F11              nonrepeatable cycle fullscreen; #{_("Fullscreen")}
 f                nonrepeatable cycle fullscreen; #{_("Fullscreen")}
 ESC              set fullscreen no; #{_("Exit Fullscreen")}
 MBTN_LEFT_DBL    nonrepeatable cycle fullscreen
 MBTN_MID         nonrepeatable cycle fullscreen
 MBTN_BACK        playlist-prev; 
-MBTN_FORWARD     playlist-next; 
+MBTN_FORWARD     playlist-next;
+w                nonrepeatable playlist-prev; #{_("Previous File")}
+b                nonrepeatable playlist-next; #{_("Next File")}
 WHEEL_LEFT       seek -5 keyframes; show-text "⯇⯇"
 WHEEL_RIGHT      seek 5 keyframes; show-text "⯈⯈"
 shift+WHEEL_DOWN seek -5 keyframes; show-text "⯇⯇"
@@ -62,9 +66,16 @@ shift+WHEEL_UP   seek 5 keyframes; show-text "⯈⯈"
 =                add video-zoom 0.05; show-text "{_("Zoom")}: ${{video-zoom}}" #{_("Zoom In")}
 +                add video-zoom 0.05; show-text "{_("Zoom")}: ${{video-zoom}}" #{_("Zoom In")}
 -                add video-zoom -0.05; show-text "{_("Zoom")}: ${{video-zoom}}" #{_("Zoom Out")}
+z                add video-zoom 0.05; show-text "{_("Zoom")}: ${{video-zoom}}" #{_("Zoom In")}
+a                add video-zoom -0.05; show-text "{_("Zoom")}: ${{video-zoom}}" #{_("Zoom Out")}
+n                add video-align-x -0.1; show-text "{_("Pan")}: ${{video-align-x}}" #{_("Pan Left")}
+i                add video-align-x 0.1; show-text "{_("Pan")}: ${{video-align-x}}" #{_("Pan Right")}
+o                add video-align-y -0.1; show-text "{_("Pan")}: ${{video-align-y}}" #{_("Pan Up")}
+,                add video-align-y 0.1; show-text "{_("Pan")}: ${{video-align-y}}" #{_("Pan Down")}
+x                add video-align-y -0.1; show-text "{_("Pan")}: ${{video-align-y}}" #{_("Pan Up")}
+e                add video-align-y 0.1; show-text "{_("Pan")}: ${{video-align-y}}" #{_("Pan Down")}
 Ctrl+WHEEL_UP    script-binding positioning/cursor-centric-zoom 0.05
 Ctrl+WHEEL_DOWN  script-binding positioning/cursor-centric-zoom -0.05
-,                add sub-delay -0.1; show-text "{_("Subtitle Delay")}: ${{sub-delay}}" #{_("Decrease Subtitle Delay")}
 .                add sub-delay +0.1; show-text "{_("Subtitle Delay")}: ${{sub-delay}}" #{_("Increase Subtitle Delay")}
 PGUP             add sub-pos -1; show-text "{_("Subtitle Position")}: ${{sub-pos}}" #{_("Move Subtitles Up")}
 PGDWN            add sub-pos +1; show-text "{_("Subtitle Position")}: ${{sub-pos}}" #{_("Move Subtitles Down")}
@@ -76,11 +87,11 @@ ctrl+=           add audio-delay 0.1; show-text "{_("Audio Delay")}: ${{audio-de
 ctrl++           add audio-delay 0.1; show-text "{_("Audio Delay")}: ${{audio-delay}}" #{_("Increase Audio Delay")}
 ctrl+[           frame-step -1 seek; show-text "⯇⯇" #{_("Go Back One Frame")}
 ctrl+]           frame-step 1 seek; show-text "⯈⯈" #{_("Advance One Frame")}
+r                frame-step -1 seek; show-text "⯇⯇" #{_("Go Back One Frame")}
+g                frame-step 1 seek; show-text "⯈⯈" #{_("Advance One Frame")}
 Ctrl+LEFT        nonrepeatable add chapter -1 #{_("Seek to the Previous Chapter")}
 Ctrl+RIGHT       nonrepeatable add chapter 1 #{_("Seek to the Next Chapter")}
-s                nonrepeatable script-message cine-screenshot #{_("Take Screenshot With Subtitles")}
-S                nonrepeatable script-message cine-screenshot video #{_("Take Screenshot Without Subtitles")}
-i                nonrepeatable script-binding stats/display-stats #{_("Statistics")}
+F7               nonrepeatable script-message cine-screenshot video #{_("Take Screenshot Without Subtitles")}
 I                nonrepeatable script-binding stats/display-stats-toggle #{_("Statistics Overlay")}
 ctrl+l           nonrepeatable ab-loop #{_("Set/Clear A-B Loop Points")}
 L                nonrepeatable cycle-values loop-file "inf" "no"; show-text "{_("Loop")}: ${{loop-file}}" #{_("Loop File")}
@@ -94,8 +105,27 @@ L                nonrepeatable cycle-values loop-file "inf" "no"; show-text "{_(
 8                add saturation 1; show-text "{_("Saturation")}: ${{saturation}}" #{_("Increase Saturation")}
 [                nonrepeatable multiply speed 1/1.1; show-text "{_("Speed")}: ${{speed}}×" #{_("Decrease Playback Speed")}
 ]                nonrepeatable multiply speed 1.1; show-text "{_("Speed")}: ${{speed}}×" #{_("Increase Playback Speed")}
-BS               set speed 1.0; show-text "{_("Speed")}: ${{speed}}×" #{_("Reset Playback Speed")}
+*                set speed 1.0; show-text "{_("Speed")}: ${{speed}}×" #{_("Reset Playback Speed")}
 """
+
+GENERAL_SHORTCUTS = [
+    (_("New Window"), "app.new-window"),
+    (_("Open Files"), "win.clear-and-add"),
+    (_("Open Folder"), "win.open-folder"),
+    (_("Open URL"), "win.open-url"),
+    (_("Add Files to Playlist"), "win.add-playlist-files"),
+    (_("Add Folder to Playlist"), "win.add-playlist-folder"),
+    (_("Add URL to Playlist"), "win.add-url"),
+    (_("Open Subtitles Menu"), "win.open-sub-menu"),
+    (_("Open Audio Menu"), "win.open-audio-menu"),
+    (_("Open Chapters Menu"), "win.open-chapters-menu"),
+    (_("Watch History"), "win.open-history"),
+    (_("Show Shortcuts"), "win.custom-shortcuts"),
+    (_("Close Window"), "win.quit"),
+    (_("Save Session"), "win.save-session"),
+    (_("Save Session and Close"), "win.save-session-close"),
+    (_("Quit"), "app.quit"),
+]
 
 MPV_TO_GTK = {v: k for k, v in KEY_REMAP.items()}
 
@@ -183,10 +213,10 @@ def get_section_name(cmd):
     return _("Miscellaneous")
 
 
-def populate_shortcuts_dialog_mpv(dialog, mpv_bindings):
+def present_shortcuts_dialog(win, mpv_bindings):
     """
-    Populates an Adw.ShortcutsDialog, joining multiple keys
-    if they trigger the same command.
+    Presents the shortcuts dialog for the app actions and mpv bindings,
+    joining multiple keys if they trigger the same command.
     """
     # Key: (label, section_title), Value: List of gtk_accelerators
     grouped_bindings = {}
@@ -230,7 +260,13 @@ def populate_shortcuts_dialog_mpv(dialog, mpv_bindings):
             grouped_bindings[group_key] = []
         grouped_bindings[group_key].append(gtk_accel)
 
+    app = win.get_application()
     sections = {
+        _("General"): [
+            (title, " ".join(app.get_accels_for_action(action)))
+            for title, action in GENERAL_SHORTCUTS
+            if app.get_accels_for_action(action)
+        ],
         _("Subtitles"): [],
         _("Audio & Volume"): [],
         _("Navigation"): [],
@@ -245,8 +281,13 @@ def populate_shortcuts_dialog_mpv(dialog, mpv_bindings):
         # e.g. "<Control>q q" shows both shortcuts for the same item
         sections[target].append((label, " ".join(accels)))
 
-    for title, items in sections.items():
-        if items:
+    sections = {title: items for title, items in sections.items() if items}
+
+    if hasattr(Adw, "ShortcutsDialog"):
+        dialog = Adw.ShortcutsDialog(  # pyright: ignore[reportAttributeAccessIssue]
+            content_width=514
+        )
+        for title, items in sections.items():
             section_widget = Adw.ShortcutsSection(  # pyright: ignore[reportAttributeAccessIssue]
                 title=title
             )
@@ -257,3 +298,16 @@ def populate_shortcuts_dialog_mpv(dialog, mpv_bindings):
                         title=label, accelerator=accels
                     )
                 )
+        dialog.present(win)
+        return
+
+    # libadwaita < 1.8 has no ShortcutsDialog, fall back to GTK's own window
+    page = Gtk.ShortcutsSection()
+    for title, items in sections.items():
+        group = Gtk.ShortcutsGroup(title=title)
+        page.add_group(group)
+        for label, accels in items:
+            group.add_shortcut(Gtk.ShortcutsShortcut(title=label, accelerator=accels))
+    window = Gtk.ShortcutsWindow(transient_for=win, modal=True)
+    window.add_section(page)
+    window.present()

@@ -21,22 +21,7 @@ template $Playlist: Adw.Dialog {
 						icon-name: "list-add-symbolic";
 						tooltip-text: _("Add");
 
-						menu-model: menu {
-							item {
-								label: _("Add Files");
-								action: "win.add-playlist-files";
-							}
-
-							item {
-								label: _("Add Folder");
-								action: "win.add-playlist-folder";
-							}
-
-							item {
-								label: _("Add URL");
-								action: "win.add-url";
-							}
-						};
+						menu-model: add_menu;
 					}
 
 					[start]
@@ -135,5 +120,22 @@ template $Playlist: Adw.Dialog {
 				}
 			}
 		}
+	}
+}
+
+menu add_menu {
+	item {
+		label: _("Add Files");
+		action: "win.add-playlist-files";
+	}
+
+	item {
+		label: _("Add Folder");
+		action: "win.add-playlist-folder";
+	}
+
+	item {
+		label: _("Add URL");
+		action: "win.add-url";
 	}
 }

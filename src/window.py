@@ -48,7 +48,7 @@ from .save_session import (
     restore_last_playlist,
     save_last_playlist_file,
 )
-from .shortcuts import INTERNAL_BINDINGS, populate_shortcuts_dialog_mpv
+from .shortcuts import INTERNAL_BINDINGS, present_shortcuts_dialog
 from .utils import (
     CONFIG_DIR,
     INPUT_CONF,
@@ -325,15 +325,7 @@ class CineWindow(Adw.ApplicationWindow):
         self._create_action("next", self.on_next_clicked)
 
     def _present_shortcuts(self, *args):
-        builder = Gtk.Builder.new_from_resource(
-            "/io/github/diegopvlk/Cine/shortcuts-dialog.ui"
-        )
-        self.shortcuts_dialog = cast(
-            Adw.ShortcutsDialog,  # pyright: ignore[reportAttributeAccessIssue]
-            builder.get_object("shortcuts_dialog"),
-        )
-        populate_shortcuts_dialog_mpv(self.shortcuts_dialog, self._input_bindings)
-        self.shortcuts_dialog.present(self)
+        present_shortcuts_dialog(self, self._input_bindings)
 
     def _present_history(self, *args):
         history_dialog = HistoryDialog(self)
